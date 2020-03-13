@@ -1,0 +1,1 @@
+${ENDECA_TOOLS_ROOT}/deployment_template/bin/deploy.sh --app ${ATG_HOME}/CommerceReferenceStore/Store/Storefront/deploy/deploy.xml --install-config ${ATG_HOME}/CommerceReferenceStore/Store/Storefront/deploy/deploy-prompt.xml
