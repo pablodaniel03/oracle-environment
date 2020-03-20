@@ -1,0 +1,7 @@
+[user]
+	name = Pablo Almaguer
+	email = pablo.almaguer@logicinfo.com
+[core]
+	longpaths = true
+[http]
+	sslverify = false
