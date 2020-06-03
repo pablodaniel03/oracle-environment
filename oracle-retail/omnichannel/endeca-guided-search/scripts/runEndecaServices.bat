@@ -32,39 +32,48 @@ goto :usage
   echo.
 goto :failed
 
+set action=
+set platformServicesEnv=
+set platformServicesCmd=
+set toolsAndFrameworksCmd=
+set casCmd=
+
 :startEndecaServices
-  echo.
-  echo Starting Endeca Services
-  echo --------------------------------------
-  echo.
-  echo  1. Platform Services
-  call ""%ENDECA_ROOT%\tools\server\bin\setenv.bat"" > nul 2>&1
-  start CMD /c ""%ENDECA_ROOT%\tools\server\bin\startup.bat""
-  
-  echo  2. Tools ^& Frameworks
-  start CMD /c ""%ENDECA_TOOLS_ROOT%\server\bin\run.bat""
-
-  echo  3. CAS Service 
-  start CMD /c ""%CAS_ROOT%\bin\cas-service.bat""
+  set "action=Starting"
+  set "platformServicesEnv=%ENDECA_ROOT%\tools\server\bin\setenv.bat"
+  set "platformServicesCmd=%ENDECA_ROOT%\tools\server\bin\startup.bat"
+  set "toolsAndFrameworksCmd=%ENDECA_TOOLS_ROOT%\server\bin\run.bat"
+  set "casCmd=%CAS_ROOT%\bin\cas-service.bat"
 goto :end
-
 
 :stopEndecaServices
+  set "action=Stopping"
+  set "platformServicesEnv=%ENDECA_ROOT%\tools\server\bin\setenv.bat"
+  set "platformServicesCmd=%ENDECA_ROOT%\tools\server\bin\shutdown.bat"
+  set "toolsAndFrameworksCmd=%ENDECA_TOOLS_ROOT%\server\bin\stop.bat"
+  set "casCmd=%CAS_ROOT%\bin\cas-service-shutdown.bat"
+goto :end
+
+
+:end
   echo.
-  echo Stoping Endeca Services
+  echo %action% Endeca Services
   echo --------------------------------------
   echo.
   echo  1. Platform Services
-  start CMD /c ""%ENDECA_ROOT%\tools\server\bin\shutdown.bat""
+  echo    %platformServicesCmd%
+  call ""%platformServicesEnv%"" > nul 2>&1
+  start CMD /c "TITLE Endeca Platform Services & %platformServicesCmd%"
   
   echo  2. Tools ^& Frameworks
-  start CMD /c ""%ENDECA_TOOLS_ROOT%\server\bin\stop.bat""
+  echo    %toolsAndFrameworksCmd%
+  start CMD /c "TITLE Endeca Tools ^& Frameworks & %toolsAndFrameworksCmd%"
 
   echo  3. CAS Service 
-  start CMD /c ""%CAS_ROOT%\bin\cas-service-shutdown.bat""
-goto :end
+  echo    %casCmd%
+  start CMD /c "TITLE Endeca CAS & %casCmd%"
 
-:end
+
   if not %ERRORLEVEL%==0 goto :failed
   exit /b 0
 
